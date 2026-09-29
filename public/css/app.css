@@ -289,3 +289,7 @@ button { font: inherit; cursor: pointer; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 :focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; border-radius: 4px; }
+/* Fix: hidden AntiBot gate must always stay hidden */
+.ab-gate[hidden] {
+  display: none !important;
+}
