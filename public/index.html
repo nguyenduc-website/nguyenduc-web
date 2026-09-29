@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>NGUYỄN ĐỨC • Web • Store — Modern Technology Platform 2026</title>
+<meta name="description" content="NGUYỄN ĐỨC • Web • Store — Nền tảng công nghệ, dịch vụ số, kho Media và giải pháp web hiện đại. Bảo mật, nhanh, chuyên nghiệp." />
+<meta name="theme-color" content="#050505" />
+<link rel="canonical" href="/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="NGUYỄN ĐỨC • Web • Store" />
+<meta property="og:description" content="Nền tảng công nghệ & dịch vụ số." />
+<meta property="og:image" content="/assets/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="NGUYỄN ĐỨC • Web • Store" />
+<meta name="twitter:description" content="Nền tảng công nghệ & dịch vụ số." />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/app.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "NGUYỄN ĐỨC • Web • Store",
+  "url": "/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "NGUYỄN ĐỨC",
+  "url": "/",
+  "logo": "/assets/logo.svg"
+}
+</script>
+</head>
+<body>
+
+<div id="antibot-gate" class="ab-gate" hidden>
+  <div class="ab-card">
+    <div class="ab-spinner" aria-hidden="true"></div>
+    <h1>Thực hiện bảo mật</h1>
+    <p>Trang này hiển thị trong khi hệ thống xác định bạn không phải là bot.</p>
+    <div class="ab-progress"><div id="ab-bar"></div></div>
+    <small id="ab-status">Đang khởi tạo…</small>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container nav">
+    <a href="/" class="brand" aria-label="NGUYỄN ĐỨC Web Store — Trang chủ">
+      <span class="brand-mark">NĐ</span>
+      <span class="brand-text">NGUYỄN ĐỨC<em>• Web • Store</em></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Điều hướng chính">
+      <a href="#services" data-nav>Dịch vụ</a>
+      <a href="#chat" data-nav>Trò chuyện</a>
+      <a href="#resources" data-nav>Tài nguyên</a>
+      <a href="#ranking" data-nav>Xếp hạng</a>
+      <a href="#media" data-nav>Kho Media</a>
+      <a href="#wallet" data-nav>Ví</a>
+      <a href="#account" data-nav>Tài khoản</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="notif-btn" class="icon-btn" aria-label="Thông báo" title="Thông báo">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm8-6v-1l-1.7-1.7V9a6.3 6.3 0 0 0-4.8-6.1V2a1.5 1.5 0 0 0-3 0v.9A6.3 6.3 0 0 0 5.7 9v4.3L4 15v1Z"/></svg>
+        <span id="notif-badge" class="badge" hidden>0</span>
+      </button>
+      <button id="menu-btn" class="icon-btn menu-toggle" aria-label="Mở menu" aria-expanded="false" aria-controls="drawer">
+        <span class="hamburger"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<aside id="drawer" class="drawer" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+  <div class="drawer-backdrop" data-close></div>
+  <nav class="drawer-panel">
+    <header><strong>MENU</strong><button class="icon-btn" data-close aria-label="Đóng">✕</button></header>
+    <a href="#services" data-nav>Dịch vụ</a>
+    <a href="#chat" data-nav>Trò chuyện</a>
+    <a href="#resources" data-nav>Tài nguyên</a>
+    <a href="#ranking" data-nav>Xếp hạng</a>
+    <a href="#media" data-nav>Kho Media</a>
+    <a href="#wallet" data-nav>Ví</a>
+    <a href="#account" data-nav>Tài khoản</a>
+    <a href="#notifications" data-nav>Thông báo</a>
+  </nav>
+</aside>
+
+<main>
+  <section id="welcome" class="hero container">
+    <div class="hero-inner">
+      <h1 class="reveal">NGUYỄN ĐỨC <span>• Web • Store</span></h1>
+      <p class="reveal">Nền tảng công nghệ & dịch vụ số hiện đại. Bảo mật, nhanh, chuyên nghiệp.</p>
+      <div class="hero-cta reveal">
+        <a class="btn btn-primary" href="#services">Khám phá dịch vụ</a>
+        <a class="btn" href="#wallet">Mở ví</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="section container">
+    <h2>Dịch vụ</h2>
+    <div class="grid cards-3">
+      <article class="card"><h3>Web Development</h3><p>Thiết kế & phát triển website hiện đại, chuẩn SEO, tối ưu tốc độ.</p></article>
+      <article class="card"><h3>Digital Media</h3><p>Kho tài nguyên số chất lượng cao cho mọi dự án.</p></article>
+      <article class="card"><h3>Technology Solutions</h3><p>Giải pháp kỹ thuật, tích hợp API, tự động hoá.</p></article>
+    </div>
+  </section>
+
+  <section id="resources" class="section container">
+    <h2>Tài nguyên</h2>
+    <div class="grid cards-3">
+      <article class="card"><h3>Documentation</h3><p>Tài liệu kỹ thuật, hướng dẫn triển khai.</p></article>
+      <article class="card"><h3>Tools</h3><p>Bộ công cụ hỗ trợ phát triển.</p></article>
+      <article class="card"><h3>Community</h3><p>Cộng đồng hỗ trợ 24/7.</p></article>
+    </div>
+  </section>
+
+  <section id="media" class="section container">
+    <div class="section-head">
+      <h2>Kho Media</h2>
+      <button id="media-create-btn" class="btn btn-primary" hidden>+ Tạo File</button>
+    </div>
+    <div class="segmented" role="tablist" aria-label="Gói Media">
+      <button role="tab" class="seg active" data-pkg="FREE">FREE</button>
+      <button role="tab" class="seg" data-pkg="BASIC">BASIC</button>
+      <button role="tab" class="seg" data-pkg="PREMIUM">PREMIUM</button>
+    </div>
+    <div id="media-list" class="grid cards-3" aria-live="polite"></div>
+  </section>
+
+  <section id="ranking" class="section container">
+    <h2>Xếp hạng</h2>
+    <div id="ranking-list" class="table-like" aria-live="polite"></div>
+  </section>
+
+  <section id="wallet" class="section container">
+    <div class="section-head"><h2>Ví</h2></div>
+    <div class="wallet-card card">
+      <div class="wallet-balance">
+        <small>Số dư</small>
+        <div class="balance-row">
+          <strong id="balance-value">******</strong>
+          <button id="balance-toggle" class="icon-btn" aria-label="Hiện số dư">👁</button>
+        </div>
+      </div>
+      <div class="wallet-actions">
+        <button class="btn btn-primary" data-action="deposit">Nạp tiền</button>
+        <button class="btn" data-action="withdraw">Rút tiền</button>
+        <button class="btn" data-action="history">Lịch sử</button>
+      </div>
+    </div>
+    <div id="wallet-history" class="table-like" hidden></div>
+  </section>
+
+  <section id="pricing" class="section container">
+    <h2>Gói dịch vụ</h2>
+    <div class="grid cards-3 pricing">
+      <article class="card price-card"><h3>FREE</h3><p class="price">0đ</p><ul><li>Truy cập media FREE</li><li>Chat hỗ trợ</li></ul><button class="btn" data-buy="FREE">Bắt đầu</button></article>
+      <article class="card price-card featured"><h3>BASIC</h3><p class="price">99.000đ<span>/tháng</span></p><ul><li>Media BASIC</li><li>Hỗ trợ ưu tiên</li></ul><button class="btn btn-primary" data-buy="BASIC">Nâng cấp</button></article>
+      <article class="card price-card"><h3>PREMIUM</h3><p class="price">299.000đ<span>/tháng</span></p><ul><li>Toàn bộ media</li><li>Hỗ trợ VIP</li></ul><button class="btn btn-primary" data-buy="PREMIUM">Nâng cấp</button></article>
+    </div>
+  </section>
+
+  <section id="chat" class="section container">
+    <h2>Trò chuyện hỗ trợ</h2>
+    <div class="chat card">
+      <div id="chat-log" class="chat-log" aria-live="polite"></div>
+      <form id="chat-form" class="chat-form">
+        <input id="chat-input" type="text" placeholder="Nhập tin nhắn…" maxlength="2000" autocomplete="off" />
+        <button class="btn btn-primary" type="submit">Gửi</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="account" class="section container">
+    <h2>Tài khoản</h2>
+    <div id="account-panel">
+      <div id="auth-forms" class="grid cards-2">
+        <form id="login-form" class="card form">
+          <h3>Đăng nhập</h3>
+          <label>Username hoặc Email<input name="username" autocomplete="username" required minlength="1" maxlength="120" /></label>
+          <label>Mật khẩu<input type="password" name="password" autocomplete="current-password" required /></label>
+          <button class="btn btn-primary" type="submit">Đăng nhập</button>
+        </form>
+        <form id="register-form" class="card form">
+          <h3>Đăng ký</h3>
+          <label>Username<input name="username" required minlength="3" maxlength="32" pattern="[a-zA-Z0-9_.\-]+" /></label>
+          <label>Email (tuỳ chọn)<input type="email" name="email" maxlength="120" /></label>
+          <label>Display name<input name="displayName" maxlength="64" /></label>
+          <label>Mật khẩu<input type="password" name="password" required minlength="8" /></label>
+          <button class="btn btn-primary" type="submit">Tạo tài khoản</button>
+        </form>
+      </div>
+      <div id="profile" class="card profile" hidden>
+        <div class="profile-head">
+          <div class="avatar" id="pf-avatar">N</div>
+          <div>
+            <h3 id="pf-name">—</h3>
+            <p id="pf-role" class="muted">—</p>
+          </div>
+          <div class="profile-actions">
+            <button class="btn btn-icon" id="btn-edit-profile" title="Chỉnh sửa">✎</button>
+            <button class="btn btn-icon" id="btn-security" title="Bảo mật">🛡</button>
+            <button class="btn btn-icon" id="btn-sessions" title="Phiên đăng nhập">🖥</button>
+            <button class="btn btn-icon danger" id="btn-logout" title="Đăng xuất">⏻</button>
+          </div>
+        </div>
+        <div class="stats">
+          <div><small>Số dư</small><strong id="pf-balance">0đ</strong></div>
+          <div><small>Gói</small><strong id="pf-pkg">FREE</strong></div>
+          <div><small>Điểm</small><strong id="pf-points">0</strong></div>
+          <div><small>Tham gia</small><strong id="pf-joined">—</strong></div>
+        </div>
+        <div class="admin-links" id="admin-links" hidden>
+          <a href="/admin.html" class="btn btn-primary">Bảng điều khiển</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="notifications" class="section container">
+    <h2>Thông báo</h2>
+    <div id="notif-list" class="table-like"></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>NGUYỄN ĐỨC</strong>
+      <p class="muted"> • Web • Store — Modern Web 2026</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="#services">Dịch Vụ</a>
+      <a href="#chat">Trò Chuyện</a>
+      <a href="#resources">Tài Nguyên</a>
+      <a href="#ranking">Xếp Hạng</a>
+    </nav>
+  </div>
+  <div class="container copyright">Bản quyền © <span id="year"></span> Nguyễn Đức. All rights reserved.</div>
+</footer>
+
+<div id="modal-root"></div>
+<div id="toast-root" class="toast-root" aria-live="polite"></div>
+
+<script src="/js/app.js" type="module"></script>
+</body>
+</html>

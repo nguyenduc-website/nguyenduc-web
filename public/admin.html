@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin • Thanh toán thủ công — Nguyễn Đức</title>
+<link rel="stylesheet" href="/css/app.css">
+<style>
+body{background:#050505;color:#eee}
+.admin-wrap{max-width:1100px;margin:auto;padding:28px 16px 60px}
+.admin-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filters button{cursor:pointer}
+.pay-card{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:16px;padding:16px;margin:10px 0}
+.pay-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.pay-label{color:var(--muted);font-size:12px}.pay-value{font-weight:700;word-break:break-word}
+.pay-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pay-actions button{cursor:pointer}
+.ok{color:var(--emerald)}.bad{color:var(--red)}.pending{color:#facc15}
+.note{width:100%;min-height:70px;background:rgba(0,0,0,.35);color:inherit;border:1px solid var(--line);border-radius:10px;padding:10px}
+</style>
+</head>
+<body>
+<div class="admin-wrap">
+  <div class="admin-head">
+    <div>
+      <h1>🛠️ Thanh toán thủ công</h1>
+      <p class="muted">Chỉ ADMIN mới có quyền duyệt hoặc từ chối.</p>
+    </div>
+    <a class="btn" href="/">← Về website</a>
+  </div>
+  <div class="filters">
+    <button class="btn btn-primary" data-status="PENDING">Đang chờ</button>
+    <button class="btn" data-status="PAID">Đã duyệt</button>
+    <button class="btn" data-status="FAILED">Thất bại</button>
+    <button class="btn" data-status="">Tất cả</button>
+  </div>
+  <div id="msg" class="muted"></div>
+  <div id="list"></div>
+</div>
+<script>
+let csrf='';
+const $=s=>document.querySelector(s);
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function money(v){return Number(v||0).toLocaleString('vi-VN')+'đ'}
+async function api(path,opt={}){
+  const o={...opt,headers:{'Content-Type':'application/json',...(opt.headers||{})}};
+  if(o.method&&o.method!=='GET')o.headers['X-CSRF-Token']=csrf;
+  const r=await fetch('/api'+path,{credentials:'same-origin',...o});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.error?.message||'Yêu cầu thất bại');
+  return j.data??j;
+}
+async function boot(){
+  try{
+    const me=await api('/auth/me'); csrf=me.csrfToken;
+    if(me.user?.role!=='ADMIN') throw new Error('Bạn không có quyền truy cập khu vực Admin');
+    load('PENDING');
+  }catch(e){$('#msg').textContent=e.message; $('#list').innerHTML='';}
+}
+async function load(status){
+  $('#msg').textContent='Đang tải...';
+  try{
+    const q=status?'?status='+status:'';
+    const rows=await api('/payments/manual/admin'+q);
+    $('#msg').textContent=rows.length?`Có ${rows.length} yêu cầu`:'Không có yêu cầu';
+    $('#list').innerHTML=rows.map(render).join('');
+  }catch(e){$('#msg').textContent=e.message}
+}
+function render(x){
+  const isCard=x.method==='CARD';
+  const status=x.status==='PENDING'?'<span class="pending">ĐANG CHỜ</span>':x.status==='PAID'?'<span class="ok">✓ ĐÃ DUYỆT</span>':'<span class="bad">✗ THẤT BẠI</span>';
+  const details=isCard?`
+    <div><div class="pay-label">Mã Thẻ</div><div class="pay-value">${esc(x.cardCode)}</div></div>
+    <div><div class="pay-label">Số Seri</div><div class="pay-value">${esc(x.cardSeri)}</div></div>
+  `:`
+    <div><div class="pay-label">Số tiền khách khai báo</div><div class="pay-value">${money(x.amount)}</div></div>
+  `;
+  const actions=x.status==='PENDING'?`
+    <textarea id="note-${esc(x.id)}" class="note" placeholder="Ghi chú cho khách (tuỳ chọn)"></textarea>
+    <div class="pay-actions">
+      <button class="btn btn-primary" onclick="approve('${esc(x.id)}',${isCard})">✓ ${isCard?'Thẻ Đã Được Duyệt':'Thanh Toán Đã Xác Nhận'}</button>
+      <button class="btn danger" onclick="reject('${esc(x.id)}',${isCard})">✗ ${isCard?'Thẻ Đã Qua Sử Dụng / Không Tồn Tại':'Admin Chưa Nhận Được Tiền'}</button>
+    </div>`:'';
+  return `<article class="pay-card">
+    <div class="pay-grid">
+      <div><div class="pay-label">Mã yêu cầu</div><div class="pay-value">${esc(x.id)}</div></div>
+      <div><div class="pay-label">Khách</div><div class="pay-value">${esc(x.displayName||x.username)} (@${esc(x.username)})</div></div>
+      <div><div class="pay-label">Phương thức</div><div class="pay-value">${isCard?'🎴 THẺ CÀO':'📱 QR'}</div></div>
+      <div><div class="pay-label">Trạng thái</div><div class="pay-value">${status}</div></div>
+      ${details}
+      <div><div class="pay-label">Thời gian</div><div class="pay-value">${new Date(x.createdAt).toLocaleString('vi-VN')}</div></div>
+    </div>${x.adminNote?`<p class="muted" style="margin-top:10px">Ghi chú: ${esc(x.adminNote)}</p>`:''}${actions}
+  </article>`;
+}
+async function decide(id,action,isCard){
+  let amount;
+  if(action==='PAID'&&isCard){
+    const v=prompt('Nhập số tiền thực tế cộng vào ví cho thẻ (VND):','10000');
+    if(v===null)return;
+    amount=Number(v);
+    if(!Number.isInteger(amount)||amount<1)return alert('Số tiền không hợp lệ');
+  }
+  const note=$('#note-'+CSS.escape(id))?.value.trim()||'';
+  if(!confirm(action==='PAID'?'Xác nhận duyệt yêu cầu này?':'Xác nhận từ chối yêu cầu này?'))return;
+  try{
+    await api('/payments/manual/admin/'+encodeURIComponent(id)+'/decide',{
+      method:'POST',body:JSON.stringify({action,amount,note})
+    });
+    await load('PENDING');
+  }catch(e){alert(e.message)}
+}
+function approve(id,isCard){decide(id,'PAID',isCard)}
+function reject(id,isCard){decide(id,'FAILED',isCard)}
+document.querySelectorAll('[data-status]').forEach(b=>b.onclick=()=>load(b.dataset.status));
+boot();
+</script>
+</body>
+</html>
