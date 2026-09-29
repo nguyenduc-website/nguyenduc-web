@@ -5,7 +5,7 @@
   "description": "NGUYỄN ĐỨC • Web • Store — Modern SaaS Platform",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "npm run db:migrate && node server/server.js",
     "dev": "node --watch server/server.js",
     "db:migrate": "node server/database/migrate.js",
     "db:backup": "node server/database/backup.js",
