@@ -63,74 +63,118 @@ const fmtMoney = (v) => new Intl.NumberFormat('vi-VN').format(v) + 'đ';
 const fmtDate = (ts) => new Date(ts).toLocaleString('vi-VN');
 
 // ─── AntiBot ────────────────────────────────
+let antibotRunning = false;
+
 async function runAntibot() {
+  if (antibotRunning) return;
+  antibotRunning = true;
+
   const gate = $('#antibot-gate');
-  gate.hidden = false;
   const bar = $('#ab-bar');
   const status = $('#ab-status');
 
-  // check status trước
   try {
-    const s = await fetch('/api/antibot/status').then(r => r.json());
-    if (s.data?.verified) { gate.hidden = true; return; }
-  } catch {}
+    gate.hidden = false;
 
-  status.textContent = 'Đang lấy challenge…';
-  const c = await fetch('/api/antibot/challenge', { method: 'POST' }).then(r => r.json());
-  if (!c.success) { status.textContent = 'Lỗi khởi tạo'; return; }
-  const { id, nonce, difficulty } = c.data;
-  bar.style.width = '10%';
+    const statusRes = await fetch('/api/antibot/status', {
+      credentials: 'same-origin',
+      cache: 'no-store'
+    });
+    const s = await statusRes.json();
 
-  // Proof-of-work nhẹ: tìm số n sao cho sha256(nonce + ':' + n) bắt đầu bằng N ký tự '0'
-  const enc = new TextEncoder();
-  const target = '0'.repeat(difficulty);
-  let solution = 0;
-  const start = Date.now();
-  const MAX_ITER = 5_000_000;
-  let hashHex = '';
-  async function sha(text) {
-    const buf = await crypto.subtle.digest('SHA-256', enc.encode(text));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  status.textContent = 'Đang tính toán challenge…';
-  bar.style.width = '20%';
-
-  while (solution < MAX_ITER) {
-    hashHex = await sha(nonce + ':' + solution);
-    if (hashHex.startsWith(target)) break;
-    solution++;
-    if (solution % 2000 === 0) {
-      const pct = 20 + Math.min(60, (solution / 200000) * 60);
-      bar.style.width = pct + '%';
-      await new Promise(r => setTimeout(r, 0));
+    if (s.data?.verified) {
+      gate.hidden = true;
+      return;
     }
-  }
 
-  if (!hashHex.startsWith(target)) {
-    status.textContent = 'Không giải được challenge, thử lại…';
-    return setTimeout(runAntibot, 1200);
-  }
+    status.textContent = 'Đang lấy challenge…';
 
-  bar.style.width = '85%';
-  status.textContent = 'Đang xác minh với máy chủ…';
+    const challengeRes = await fetch('/api/antibot/challenge', {
+      method: 'POST',
+      credentials: 'same-origin',
+      cache: 'no-store'
+    });
+    const c = await challengeRes.json();
 
-  const elapsedMs = Math.max(Date.now() - start, 2000);
-  const v = await fetch('/api/antibot/verify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'same-origin',
-    body: JSON.stringify({ id, solution, elapsedMs }),
-  }).then(r => r.json());
+    if (!c.success) {
+      throw new Error('Không lấy được challenge');
+    }
 
-  if (!v.success) {
+    const { id, nonce, difficulty } = c.data;
+    bar.style.width = '10%';
+
+    const enc = new TextEncoder();
+    const target = '0'.repeat(difficulty);
+    let solution = 0;
+    const start = Date.now();
+    const MAX_ITER = 5_000_000;
+    let hashHex = '';
+
+    async function sha(text) {
+      const buf = await crypto.subtle.digest(
+        'SHA-256',
+        enc.encode(text)
+      );
+      return Array.from(new Uint8Array(buf))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    status.textContent = 'Đang tính toán challenge…';
+    bar.style.width = '20%';
+
+    while (solution < MAX_ITER) {
+      hashHex = await sha(nonce + ':' + solution);
+
+      if (hashHex.startsWith(target)) break;
+
+      solution++;
+
+      if (solution % 2000 === 0) {
+        const pct = 20 + Math.min(60, (solution / 200000) * 60);
+        bar.style.width = pct + '%';
+        await new Promise(r => setTimeout(r, 0));
+      }
+    }
+
+    if (!hashHex.startsWith(target)) {
+      throw new Error('Không giải được challenge');
+    }
+
+    bar.style.width = '85%';
+    status.textContent = 'Đang xác minh với máy chủ…';
+
+    const verifyRes = await fetch('/api/antibot/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      cache: 'no-store',
+      body: JSON.stringify({
+        id,
+        solution,
+        elapsedMs: Math.max(Date.now() - start, 2000)
+      })
+    });
+
+    const v = await verifyRes.json();
+
+    if (!v.success) {
+      throw new Error(v.error?.message || 'Xác minh thất bại');
+    }
+
+    bar.style.width = '100%';
+    status.textContent = 'Đã xác minh ✓';
+
+    await new Promise(r => setTimeout(r, 400));
+
+    gate.hidden = true;
+
+  } catch (e) {
+    console.error('[AntiBot]', e);
     status.textContent = 'Xác minh thất bại, thử lại…';
-    return setTimeout(runAntibot, 1200);
+  } finally {
+    antibotRunning = false;
   }
-  bar.style.width = '100%';
-  status.textContent = 'Đã xác minh ✓';
-  await new Promise(r => setTimeout(r, 400));
-  gate.hidden = true;
 }
 
 // ─── Drawer ─────────────────────────────────
